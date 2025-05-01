@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   UseGuards,
@@ -26,24 +27,24 @@ import {
 @ApiTags("users")
 @ApiBearerAuth()
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Post()
   @ApiOperation({ summary: "Create user" })
   @ApiResponse({ status: 201, description: "User created sucessfully." })
   async createUser(
-   
+
     @Body() { name, email }: CreateUserDTO,
     @Body("password", HashPasswordPipe) hashedPassword: string,
   ) {
     const userCreated = await this.userService.createUser({
       name: name,
-      email : email,
+      email: email,
       password: hashedPassword,
     });
 
     return {
-      message: "usuário criado com sucesso",
+      message: "Usuário criado com sucesso",
       user: new ListUsersDTO(userCreated.id, userCreated.name),
     };
   }
@@ -67,19 +68,20 @@ export class UserController {
     const userUpdated = await this.userService.updateUser(id, newData);
 
     return {
-      message: "usuário atualizado com sucesso",
+      message: "Usuário atualizado com sucesso",
       user: userUpdated,
     };
   }
 
   @Delete("/:id")
   @ApiOperation({ summary: "Delete user" })
-  async removeUser(@Param("id") id: string) {
+  async removeUser(@Param("id", new ParseUUIDPipe()) id: string) {
     const userRemoved = await this.userService.deleteUser(id);
 
     return {
-      message: "usuário removido com suceso",
+      message: "Usuário removido com sucesso",
       user: userRemoved,
     };
   }
+
 }

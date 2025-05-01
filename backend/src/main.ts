@@ -13,13 +13,14 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
   app.enableCors({
     origin: "*",
   });
 
   const config = new DocumentBuilder()
-    .setTitle("Nest js API")
-    .setDescription("API Rest Documentation")
+    .setTitle("Easy Terms API")
+    .setDescription("Documentação da API Easy Terms")
     .setVersion("1.0")
     .addTag("users")
     .addServer("http://localhost:8000", "Development Server")
@@ -31,5 +32,6 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   await app.listen(8000);
+
 }
 bootstrap();

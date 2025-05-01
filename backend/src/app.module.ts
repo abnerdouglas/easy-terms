@@ -11,7 +11,7 @@ import { UserModule } from "./modules/user/user.module";
 import { FilterGlobalException } from "./resources/filters/filter-global-exception";
 import { LoggerGlobalInterceptor } from "./resources/interceptors/logger-global.interceptors";
 import { AuthenticationModule } from "./modules/auth/authentication.module";
-import { RedirectController } from "./redirect.controller";
+import { TermModule } from "./modules/term/term.module";
 
 @Module({
   imports: [
@@ -23,15 +23,10 @@ import { RedirectController } from "./redirect.controller";
       useClass: PostgresConfigService,
       inject: [PostgresConfigService],
     }),
-    // CacheModule.registerAsync({
-    //   useFactory: async () => ({
-    //     store: await redisStore({ ttl: 10 * 1000 }),
-    //   }),
-    //   isGlobal: true,
-    // }),
     AuthenticationModule,
+    TermModule
   ],
-  controllers: [RedirectController],
+  controllers: [],
   providers: [
     {
       provide: APP_FILTER,
