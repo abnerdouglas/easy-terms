@@ -1,7 +1,8 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ApiTags } from "@nestjs/swagger";
-import { Role } from "./enums/role.enum";
+import { Role } from "../enums/role.enum";
+import { UserTermAcceptanceEntity } from "./user-term-acceptance.entity";
 
 @ApiTags("users")
 @Entity({ name: "users" })
@@ -12,7 +13,7 @@ export class UserEntity {
   @Column({ name: "name", length: 100, nullable: false })
   name: string;
 
-  @Column({ name: "email", length: 70, nullable: false })
+  @Column({ name: "email", length: 70, nullable: false, unique: true })
   email: string;
 
   @Exclude()
@@ -21,6 +22,9 @@ export class UserEntity {
 
   @Column({ type: "enum", enum: Role, default: Role.EMPLOYEE, nullable: false })
   role: Role;
+
+  @OneToMany(() => UserTermAcceptanceEntity, (uta) => uta.user)
+  termAcceptances: UserTermAcceptanceEntity[];
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: string;

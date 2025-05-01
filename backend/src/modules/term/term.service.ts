@@ -1,24 +1,35 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { TermEntity } from "./term.entity";
+import { TermEntity } from "./entities/term.entity";
 import { CreateTermDTO } from "./dto/create-term.dto";
 import { ListTermsDTO } from "./dto/list-term.dto";
 import { UpdateTermDTO } from "./dto/update-term.dto";
+import { HistoryAction } from "../history/enums/history-action.enum";
+import { HistoryService } from "../history/history.service";
 
 @Injectable()
 export class TermService {
   constructor(
     @InjectRepository(TermEntity)
     private readonly termRepository: Repository<TermEntity>,
+    private readonly historyService: HistoryService,
   ) {}
 
   async createTerm(data: CreateTermDTO) {
     const termEntity = new TermEntity();
-
     Object.assign(termEntity, data as TermEntity);
 
-    return this.termRepository.save(termEntity);
+    const termCreated = await this.termRepository.save(termEntity);
+
+    await this.historyService.log(
+      HistoryAction.CREATE_TERM,
+      'Term',
+      termCreated.id.toString(),
+      termCreated,
+    );
+
+    return termCreated;
   }
 
   async listTerms() {

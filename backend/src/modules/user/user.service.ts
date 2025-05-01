@@ -1,25 +1,36 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UserEntity } from "./user.entity";
+import { UserEntity } from "./entities/user.entity";
 import { CreateUserDTO } from "./dto/CreateUser.dto";
 import { ListUsersDTO } from "./dto/ListUser.dto";
 import { UpdateUserDTO } from "./dto/UpdateUser.dto";
+import { HistoryAction } from "../history/enums/history-action.enum";
+import { HistoryService } from "../history/history.service";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly historyService: HistoryService,
   ) {}
 
   async createUser(dataOfUser: CreateUserDTO) {
     const userEntity = new UserEntity();
-
     Object.assign(userEntity, dataOfUser as unknown as UserEntity);
-
-    return this.userRepository.save(userEntity);
-  }
+  
+    const createdUser = await this.userRepository.save(userEntity);
+  
+    await this.historyService.log(
+      HistoryAction.CREATE_USER,
+      'User',
+      createdUser.id.toString(),
+      createdUser,
+    );
+  
+    return createdUser;
+  }  
 
   async listUsers() {
     const usersSaved = await this.userRepository.find();

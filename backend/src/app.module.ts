@@ -12,6 +12,7 @@ import { FilterGlobalException } from "./resources/filters/filter-global-excepti
 import { LoggerGlobalInterceptor } from "./resources/interceptors/logger-global.interceptors";
 import { AuthenticationModule } from "./modules/auth/authentication.module";
 import { TermModule } from "./modules/term/term.module";
+import { HistoryModule } from "./modules/history/history.module";
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { TermModule } from "./modules/term/term.module";
       inject: [PostgresConfigService],
     }),
     AuthenticationModule,
-    TermModule
+    TermModule,
+    HistoryModule,
   ],
   controllers: [],
   providers: [
