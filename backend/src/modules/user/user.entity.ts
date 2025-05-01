@@ -1,13 +1,7 @@
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ApiTags } from "@nestjs/swagger";
+import { Role } from "./enums/role.enum";
 
 @ApiTags("users")
 @Entity({ name: "users" })
@@ -24,6 +18,9 @@ export class UserEntity {
   @Exclude()
   @Column({ name: "password", length: 255, nullable: false })
   password: string;
+
+  @Column({ type: "enum", enum: Role, default: Role.EMPLOYEE, nullable: false })
+  role: Role;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: string;

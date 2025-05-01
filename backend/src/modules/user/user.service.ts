@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserEntity } from "./user.entity";
@@ -24,7 +24,13 @@ export class UserService {
   async listUsers() {
     const usersSaved = await this.userRepository.find();
     const usersList = usersSaved.map(
-      (user) => new ListUsersDTO(user.id, user.name),
+      (user) => new ListUsersDTO(
+        user.id, 
+        user.name,
+        user.email,
+        user.role,
+        user.createdAt,
+      ),
     );
     return usersList;
   }
@@ -61,5 +67,23 @@ export class UserService {
     await this.userRepository.delete(user.id);
 
     return user;
+  }
+  
+  async getUserByEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email }
+      });
+
+      if (!user) {
+        throw new NotFoundException(`Usuário com email ${email} não encontrado`);
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      console.error('Erro ao buscar usuário por email:', error);
+      throw new HttpException('Erro ao buscar usuário por email', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

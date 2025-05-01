@@ -1,12 +1,16 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, UseGuards } from "@nestjs/common";
-import { AuthenticationGuard } from "../auth/authentication.guard";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { TermService } from "./term.service";
 import { ListTermsDTO } from "./dto/list-term.dto";
 import { CreateTermDTO } from "./dto/create-term.dto";
 import { UpdateTermDTO } from "./dto/update-term.dto";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { RolesGuard } from "../auth/guards/role.guard";
+import { Role } from "../user/enums/role.enum";
+import { Roles } from "../auth/decorators/role.decorator";
 
-@UseGuards(AuthenticationGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 @Controller("/terms")
 @ApiTags("terms")
 @ApiBearerAuth()

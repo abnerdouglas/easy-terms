@@ -1,5 +1,6 @@
-import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, MinLength } from "class-validator";
 import { UniqueEmail } from "../validation/UniqueEmail.validation";
+import { Role } from "../enums/role.enum";
 
 export class CreateUserDTO {
   @IsNotEmpty({ message: "O nome não pode ser vazio" })
@@ -11,4 +12,8 @@ export class CreateUserDTO {
 
   @MinLength(6, { message: "A senha precisa ter pelo menos 6 caracteres" })
   password: string;
+
+  @IsEnum(Role, { message: "O papel deve ser um dos seguintes: ADMIN, EMPLOYEE" })
+  @IsNotEmpty({ message: "O papel não pode estar vazio" })
+  role: string;
 }

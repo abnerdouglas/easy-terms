@@ -2,10 +2,12 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "../user/user.service";
+import { Role } from "../user/enums/role.enum";
 
 export interface UserPayload {
   sub: string;
-  username: string;
+  name: string;
+  role: Role;
 }
 
 @Injectable()
@@ -26,7 +28,8 @@ export class AuthenticationService {
 
     const payload: UserPayload = {
       sub: user.id, // subject = sujeito
-      username: user.name,
+      name: user.name,
+      role: user.role
     };
 
     return {
