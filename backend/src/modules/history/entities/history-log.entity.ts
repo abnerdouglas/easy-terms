@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
 import { HistoryAction } from "../enums/history-action.enum";
+import { HistoryEntity } from "../enums/history-entity.enum";
 
-@Entity()
+@Entity({ name: "history_log" })
 export class HistoryLogEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -9,8 +10,8 @@ export class HistoryLogEntity {
   @Column({ type: 'enum', enum: HistoryAction })
   action: HistoryAction;
 
-  @Column()
-  entity: string; // exemplo: 'User' ou 'Term'
+  @Column({ type: 'enum', enum: HistoryEntity })
+  entity: HistoryEntity; // exemplo: 'User' ou 'Term'
 
   @Column("uuid")
   entityId: string; // pode ser string mesmo que o id seja number

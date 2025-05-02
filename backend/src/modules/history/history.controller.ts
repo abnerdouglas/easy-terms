@@ -1,10 +1,11 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { HistoryService } from './history.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { Roles } from '../auth/decorators/role.decorator';
 import { Role } from '../user/enums/role.enum';
+import { ListHistoryLogDTO } from './dto/list-history.dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.ADMIN)
@@ -15,10 +16,8 @@ export class HistoryController {
   constructor(private readonly historyService: HistoryService) {}
 
   @Get()
-  async getLogs(
-    @Query('entity') entity?: string,
-    @Query('entityId') entityId?: string,
-  ) {
-    return this.historyService.findAll({ entity, entityId });
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async getLogs(@Query() query?: ListHistoryLogDTO) {
+    return this.historyService.findAll(query);
   }
 }

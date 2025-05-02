@@ -8,7 +8,7 @@ import { HistoryLogEntity } from './entities/history-log.entity';
   imports: [TypeOrmModule.forFeature([HistoryLogEntity])],
   providers: [HistoryService],
   controllers: [HistoryController],
-  exports: [HistoryService], // permite injeção em outros módulos
+  exports: [HistoryService],
 })
 
 export class HistoryModule {}

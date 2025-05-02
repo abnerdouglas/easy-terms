@@ -7,6 +7,7 @@ import { ListUsersDTO } from "./dto/ListUser.dto";
 import { UpdateUserDTO } from "./dto/UpdateUser.dto";
 import { HistoryAction } from "../history/enums/history-action.enum";
 import { HistoryService } from "../history/history.service";
+import { HistoryEntity } from "../history/enums/history-entity.enum";
 
 @Injectable()
 export class UserService {
@@ -24,7 +25,7 @@ export class UserService {
   
     await this.historyService.log(
       HistoryAction.CREATE_USER,
-      'User',
+      HistoryEntity.USER,
       createdUser.id.toString(),
       createdUser,
     );

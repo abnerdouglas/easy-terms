@@ -6,7 +6,7 @@ export class CreateHistoryLogs1746111483394 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "user_term_acceptances" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "acceptedAt" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid NOT NULL, "termId" uuid NOT NULL, CONSTRAINT "PK_c62cf3c33c6ef21a4f688fed1bd" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."history_log_entity_action_enum" AS ENUM('CREATE_USER', 'CREATE_TERM', 'ACCEPT_TERM', 'DELETE_USER')`);
-        await queryRunner.query(`CREATE TABLE "history_log_entity" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "action" "public"."history_log_entity_action_enum" NOT NULL, "entity" character varying NOT NULL, "entityId" uuid NOT NULL, "data" jsonb, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_5262e5381b27aabce9ee1cb5739" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "history_log" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "action" "public"."history_log_entity_action_enum" NOT NULL, "entity" character varying NOT NULL, "entityId" uuid NOT NULL, "data" jsonb, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_5262e5381b27aabce9ee1cb5739" PRIMARY KEY ("id"))`);
         await queryRunner.query(`ALTER TABLE "terms" ADD "version" character varying NOT NULL`);
         await queryRunner.query(`ALTER TABLE "terms" ADD "is_active" boolean NOT NULL DEFAULT false`);
         await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email")`);

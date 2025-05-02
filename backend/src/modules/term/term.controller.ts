@@ -22,11 +22,13 @@ export class TermController {
   @ApiResponse({ status: 201, description: "Termo criado com sucesso" })
   async createTerm(
    
-    @Body() { title, content }: CreateTermDTO,
+    @Body() { title, content, version, isActive }: CreateTermDTO,
   ) {
     const termCreated = await this.termService.createTerm({
       title: title,
-      content: content
+      content: content,
+      version: version,
+      isActive: isActive,
     });
 
     return {

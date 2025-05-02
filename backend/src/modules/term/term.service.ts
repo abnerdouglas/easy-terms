@@ -7,6 +7,7 @@ import { ListTermsDTO } from "./dto/list-term.dto";
 import { UpdateTermDTO } from "./dto/update-term.dto";
 import { HistoryAction } from "../history/enums/history-action.enum";
 import { HistoryService } from "../history/history.service";
+import { HistoryEntity } from "../history/enums/history-entity.enum";
 
 @Injectable()
 export class TermService {
@@ -24,7 +25,7 @@ export class TermService {
 
     await this.historyService.log(
       HistoryAction.CREATE_TERM,
-      'Term',
+      HistoryEntity.TERM,
       termCreated.id.toString(),
       termCreated,
     );
