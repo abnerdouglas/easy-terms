@@ -1,8 +1,4 @@
-import {
-  ClassSerializerInterceptor,
-  ConsoleLogger,
-  Module,
-} from "@nestjs/common";
+import { ClassSerializerInterceptor, ConsoleLogger, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PostgresConfigService } from "./config/postgres.config.service";
@@ -13,10 +9,10 @@ import { LoggerGlobalInterceptor } from "./resources/interceptors/logger-global.
 import { AuthenticationModule } from "./modules/auth/authentication.module";
 import { TermModule } from "./modules/term/term.module";
 import { HistoryModule } from "./modules/history/history.module";
+import { EmailModule } from "./modules/email/email.module";
 
 @Module({
   imports: [
-    UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -24,9 +20,11 @@ import { HistoryModule } from "./modules/history/history.module";
       useClass: PostgresConfigService,
       inject: [PostgresConfigService],
     }),
+    UserModule,
     AuthenticationModule,
     TermModule,
     HistoryModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [

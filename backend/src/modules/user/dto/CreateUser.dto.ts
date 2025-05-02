@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, MinLength } from "class-validator";
+import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsUUID, MinLength } from "class-validator";
 import { UniqueEmail } from "../validation/UniqueEmail.validation";
 import { Role } from "../enums/role.enum";
 
@@ -15,5 +15,9 @@ export class CreateUserDTO {
 
   @IsEnum(Role, { message: "O papel deve ser um dos seguintes: ADMIN, EMPLOYEE" })
   @IsNotEmpty({ message: "O papel não pode estar vazio" })
-  role: string;
+  role: Role;
+
+  @IsArray()
+  @IsUUID('all', { each: true })
+  acceptedTermIds: string[]; // ← IDs dos termos que o usuário aceitou
 }

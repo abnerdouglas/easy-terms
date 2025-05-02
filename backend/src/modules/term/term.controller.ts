@@ -8,6 +8,7 @@ import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/role.guard";
 import { Role } from "../user/enums/role.enum";
 import { Roles } from "../auth/decorators/role.decorator";
+import { ConfirmConsentDTO } from "./dto/confirm-consent.dto";
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.ADMIN)
@@ -15,13 +16,13 @@ import { Roles } from "../auth/decorators/role.decorator";
 @ApiTags("terms")
 @ApiBearerAuth()
 export class TermController {
-  constructor(private termService: TermService) {}
+  constructor(private termService: TermService) { }
 
   @Post()
   @ApiOperation({ summary: "Cria um termo" })
   @ApiResponse({ status: 201, description: "Termo criado com sucesso" })
   async createTerm(
-   
+
     @Body() { title, content, version, isActive }: CreateTermDTO,
   ) {
     const termCreated = await this.termService.createTerm({
@@ -34,8 +35,8 @@ export class TermController {
     return {
       message: "Termo criado com sucesso",
       term: new ListTermsDTO(
-        termCreated.id.toString(), 
-        termCreated.title, 
+        termCreated.id.toString(),
+        termCreated.title,
         termCreated.content,
         termCreated.version,
         termCreated.createdAt,
@@ -43,6 +44,11 @@ export class TermController {
         termCreated.isActive,),
     };
   }
+
+  @Post('consent/confirm')
+  async confirmConsent(@Body() dto: ConfirmConsentDTO) {
+    return this.termService.confirmConsent(dto);
+  }  
 
   @Get()
   @ApiOperation({ summary: "Lista todos os termos" })

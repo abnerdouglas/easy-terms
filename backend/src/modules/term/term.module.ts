@@ -4,9 +4,10 @@ import { TermEntity } from "./entities/term.entity";
 import { TermController } from "./term.controller";
 import { TermService } from "./term.service";
 import { HistoryModule } from "../history/history.module";
+import { UserTermAcceptanceEntity } from "../user/entities/user-term-acceptance.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TermEntity]), HistoryModule],
+  imports: [TypeOrmModule.forFeature([TermEntity, UserTermAcceptanceEntity]), HistoryModule],
   controllers: [TermController],
   providers: [TermService],
   exports: [TermService],

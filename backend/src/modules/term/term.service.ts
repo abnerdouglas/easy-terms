@@ -8,6 +8,8 @@ import { UpdateTermDTO } from "./dto/update-term.dto";
 import { HistoryAction } from "../history/enums/history-action.enum";
 import { HistoryService } from "../history/history.service";
 import { HistoryEntity } from "../history/enums/history-entity.enum";
+import { ConfirmConsentDTO } from "./dto/confirm-consent.dto";
+import { UserTermAcceptanceEntity } from "../user/entities/user-term-acceptance.entity";
 
 @Injectable()
 export class TermService {
@@ -15,6 +17,9 @@ export class TermService {
     @InjectRepository(TermEntity)
     private readonly termRepository: Repository<TermEntity>,
     private readonly historyService: HistoryService,
+
+    @InjectRepository(UserTermAcceptanceEntity)
+    private readonly userTermAcceptanceRepository: Repository<UserTermAcceptanceEntity>,
   ) {}
 
   async createTerm(data: CreateTermDTO) {
@@ -32,6 +37,23 @@ export class TermService {
 
     return termCreated;
   }
+
+  async confirmConsent({ userId, termId }: ConfirmConsentDTO) {
+    const existing = await this.userTermAcceptanceRepository.findOne({
+      where: {
+        user: { id: userId },
+        term: { id: termId },
+      },
+      relations: ['user', 'term'], // necessário para buscar por campos aninhados
+    });
+  
+    if (!existing) {
+      throw new NotFoundException('Aceite inicial do termo não encontrado.');
+    }
+  
+    existing.acceptedAt = new Date();
+    return this.userTermAcceptanceRepository.save(existing);
+  }  
 
   async listTerms() {
     const termsSaved = await this.termRepository.find();

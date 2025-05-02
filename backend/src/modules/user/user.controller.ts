@@ -23,14 +23,15 @@ export class UserController {
   @ApiResponse({ status: 201, description: "User created sucessfully." })
   async createUser(
 
-    @Body() { name, email, role }: CreateUserDTO,
+    @Body() { name, email, role, acceptedTermIds }: CreateUserDTO,
     @Body("password", HashPasswordPipe) hashedPassword: string,
   ) {
     const userCreated = await this.userService.createUser({
       name: name,
       email: email,
       password: hashedPassword,
-      role: role
+      role: role,
+      acceptedTermIds: acceptedTermIds,
     });
 
     return {
