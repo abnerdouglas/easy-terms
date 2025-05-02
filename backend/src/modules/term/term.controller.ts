@@ -33,7 +33,14 @@ export class TermController {
 
     return {
       message: "Termo criado com sucesso",
-      term: new ListTermsDTO(termCreated.id.toString(), termCreated.title, termCreated.content),
+      term: new ListTermsDTO(
+        termCreated.id.toString(), 
+        termCreated.title, 
+        termCreated.content,
+        termCreated.version,
+        termCreated.createdAt,
+        termCreated.updatedAt,
+        termCreated.isActive,),
     };
   }
 

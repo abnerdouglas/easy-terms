@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext';
 import TermsPage from './pages/terms/TermsPage';
 import UserPage from './pages/users/UserPage';
 import NavbarLayout from './components/Navbar';
+import TermsAcceptancePage from './pages/termsAcceptance/TermsAcceptancePage';
 
 function App() {
   const { authenticated } = useAuth();
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Navigate to="/terms" />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/users" element={<UserPage />} />
+          <Route path="/termsAcceptance" element={<TermsAcceptancePage />} />
         </Routes>
       </NavbarLayout>
     </>

@@ -41,6 +41,7 @@ export class UserController {
         userCreated.email,
         userCreated.role,
         userCreated.createdAt,
+        userCreated.updatedAt,
       ),
     };
   }

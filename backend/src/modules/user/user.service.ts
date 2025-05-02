@@ -42,6 +42,7 @@ export class UserService {
         user.email,
         user.role,
         user.createdAt,
+        user.updatedAt,
       ),
     );
     return usersList;

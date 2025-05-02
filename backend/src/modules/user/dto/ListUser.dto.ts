@@ -5,5 +5,6 @@ export class ListUsersDTO {
     readonly email: string,
     readonly role: string,
     readonly createdAt: string,
+    readonly updatedAt: string,
   ) {}
 }

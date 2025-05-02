@@ -39,13 +39,37 @@ export default function UserPage() {
   }, []);
 
   const columns = [
-    { title: 'Nome', dataIndex: 'name', key: 'name' },
-    { title: 'E-mail', dataIndex: 'email', key: 'email' },
-    { title: 'Função', dataIndex: 'role', key: 'role' },
+    { 
+      title: 'Nome', 
+      dataIndex: 'name',
+      key: 'name' 
+    },
+    { 
+      title: 'E-mail', 
+      dataIndex: 'email', 
+      key: 'email' 
+    },
+    { 
+      title: 'Função', 
+      dataIndex: 'role', 
+      key: 'role' 
+    },
+    {
+      title: 'Data de Criação',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (value: string) => new Date(value).toLocaleString('pt-BR'),
+    },
+    {
+      title: 'Data de Atualização',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (value: string) => new Date(value).toLocaleString('pt-BR'),
+    },
   ];
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px' }}>
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '20px' }}>
       <Card title="Cadastrar Novo Usuário" style={{ marginBottom: 24 }}>
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item label="Nome" name="name" rules={[{ required: true }]}>
@@ -59,8 +83,8 @@ export default function UserPage() {
           </Form.Item>
           <Form.Item label="Função" name="role" rules={[{ required: true }]}>
             <Select placeholder="Selecione uma função">
-              <Option value="ADMIN">Admin</Option>
-              <Option value="USER">User</Option>
+              <Option value="ADMIN">Adminitrador</Option>
+              <Option value="EMPLOYEE">Funcionário</Option>
             </Select>
           </Form.Item>
           <Form.Item>

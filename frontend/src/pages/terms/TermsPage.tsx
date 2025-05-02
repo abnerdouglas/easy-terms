@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Form, Input, Switch, Button, message, Card } from 'antd';
+import { Table, Form, Input, Switch, Button, message, Card, Tag } from 'antd';
 import { createTerm, getTerms } from '../../services/term/termService';
 
 export default function TermsPage() {
@@ -35,13 +35,38 @@ export default function TermsPage() {
   }, []);
 
   const columns = [
-    { title: 'Título', dataIndex: 'title', key: 'title' },
-    { title: 'Versão', dataIndex: 'version', key: 'version' },
+    {
+      title: 'Título',
+      dataIndex: 'title',
+      key: 'title'
+    },
+    {
+      title: 'Versão',
+      dataIndex: 'version',
+      key: 'version'
+    },
     {
       title: 'Ativo',
       dataIndex: 'isActive',
       key: 'isActive',
-      render: (value: boolean) => (value ? 'Sim' : 'Não'),
+      render: (isActive: boolean) =>
+        isActive ? (
+          <Tag color="green">Ativo</Tag>
+        ) : (
+          <Tag color="red">Inativo</Tag>
+        ),
+    },
+    {
+      title: 'Data de Criação',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (value: string) => new Date(value).toLocaleString('pt-BR'),
+    },
+    {
+      title: 'Data de Atualização',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (value: string) => new Date(value).toLocaleString('pt-BR'),
     },
   ];
 
