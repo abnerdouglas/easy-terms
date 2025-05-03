@@ -12,7 +12,7 @@ const { Text, Link } = Typography;
 export default function CreateUserPage() {
     const [form] = Form.useForm();
     const [terms, setTerms] = useState([]);
-    const [, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const fetchTerms = async () => {
@@ -28,7 +28,6 @@ export default function CreateUserPage() {
     };
 
     const onSubmit = async (values: CreateUserPayload) => {
-        console.log('values', values);
         SweetAlert.loading();
         try {
             await createUser(values);
@@ -62,7 +61,7 @@ export default function CreateUserPage() {
         <div
             style={{
                 background: 'linear-gradient(to right, #e0eafc, #cfdef3)',
-                height: '110vh',
+                height: '150vh',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -70,7 +69,7 @@ export default function CreateUserPage() {
             <Card
                 title="Cadastrar Novo Usuário"
                 style={{
-                    width: 500,
+                    width: 700,
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
                     borderRadius: 12,
                     border: '1px solid #d0d0d0',
@@ -102,7 +101,7 @@ export default function CreateUserPage() {
                         name="password"
                         rules={[{ required: true, message: 'Por favor, insira a senha.' }]}
                     >
-                        <Input.Password placeholder='Crie uma senha para o usuário' />
+                        <Input.Password  placeholder='Crie uma senha para o usuário'/>
                     </Form.Item>
 
                     <Form.Item
@@ -122,31 +121,28 @@ export default function CreateUserPage() {
                         name="acceptedTermIds"
                         initialValue={[]}
                     >
-                        <div style={{ maxHeight: 150, overflowY: 'auto', paddingRight: 8 }}>
-                            <Checkbox.Group style={{ display: 'flex', flexDirection: 'column' }}>
-                                {terms.map((term: any) => (
-                                    <Checkbox key={term.id} value={term.id} style={{ marginBottom: 12 }}>
-                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                            <strong>{term.title} (v{term.version})</strong>
-                                            <span style={{ fontSize: 12, color: '#555' }}>{term.content}</span>
-                                        </div>
-                                    </Checkbox>
-                                ))}
-                            </Checkbox.Group>
-                        </div>
-
+                         <Checkbox.Group style={{ display: 'flex', flexDirection: 'column' }}>
+                            {terms.map((term: any) => (
+                                <Checkbox key={term.id} value={term.id} style={{ marginBottom: 12 }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <strong>{term.title} (v{term.version})</strong>
+                                        <span style={{ fontSize: 12, color: '#555' }}>{term.content}</span>
+                                    </div>
+                                </Checkbox>
+                            ))}
+                        </Checkbox.Group>
                     </Form.Item>
 
                     <Form.Item>
                         <Button htmlType="submit" type="primary" style={{ background: '#001529' }}>
                             Salvar
                         </Button>
-
-                        <div style={{ textAlign: 'center', marginTop: 12 }}>
-                            <Text>Já possui uma conta? </Text>
-                            <Link onClick={() => navigate('/login')}>Clique aqui para fazer login</Link>
-                        </div>
                     </Form.Item>
+
+                    <div style={{ textAlign: 'center', marginTop: 24 }}>
+                        <Text>Já possui uma conta? </Text>
+                        <Link onClick={() => navigate('/login')}>Clique aqui para fazer login</Link>
+                    </div>
 
                 </Form>
             </Card>
