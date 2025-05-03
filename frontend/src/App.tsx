@@ -1,32 +1,24 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
-import { useAuth } from './context/AuthContext';
 import TermsPage from './pages/terms/TermsPage';
 import UserPage from './pages/users/UserPage';
-import NavbarLayout from './components/Navbar';
 import TermsAcceptancePage from './pages/termsAcceptance/TermsAcceptancePage';
 import ConfirmConsentPage from './pages/confirmConsent/ConfirmConsentPage';
+import PrivateRoutes from './routes/PrivateRoutes';
 
-function App() {
-  const { authenticated } = useAuth();
-
-  if (!authenticated) {
-    return <Login />;
-  }
-
+export default function App() {
   return (
-    <>
-      <NavbarLayout>
-        <Routes>
-          <Route path="/" element={<Navigate to="/terms" />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/users" element={<UserPage />} />
-          <Route path="/termsAcceptance" element={<TermsAcceptancePage />} />
-          <Route path="/confirm-consent" element={<ConfirmConsentPage />} />
-        </Routes>
-      </NavbarLayout>
-    </>
+    <Routes>
+      {/* Rota pública (sem autenticação, sem layout) */}
+      <Route path="/" element={<Login />} />
+      <Route path="/confirm-consent" element={<ConfirmConsentPage />} />
+
+      {/* Rotas privadas (com Navbar e auth obrigatória) */}
+      <Route element={<PrivateRoutes />}>
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/users" element={<UserPage />} />
+        <Route path="/termsAcceptance" element={<TermsAcceptancePage />} />
+      </Route>
+    </Routes>
   );
 }
-
-export default App;

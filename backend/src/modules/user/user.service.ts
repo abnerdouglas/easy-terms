@@ -34,31 +34,28 @@ export class UserService {
     const userEntity = this.userRepository.create(data);
     const createdUser = await this.userRepository.save(userEntity);
     const frontendUrl = this.configService.get<string>('FRONT_URL');
-
+  
     await this.historyService.log(
       HistoryAction.CREATE_USER,
       HistoryEntity.USER,
       createdUser.id,
       createdUser,
     );
-
-    for (const termId of data.acceptedTermIds) {
-      const term = await this.termRepository.findOneBy({ id: termId });
-      if (!term) {
-        throw new NotFoundException(`Term with id ${termId} not found`);
-      }
-
-      const acceptance = this.userTermAcceptanceRepository.create({
-        user: createdUser,
-        term: term,
-      });
-
-      await this.userTermAcceptanceRepository.save(acceptance);
-    }    
   
-    // Montar corpo do e-mail com os termos aceitos
+    // Buscar todos os termos assinalados de uma vez
     const acceptedTerms = await this.termRepository.findByIds(data.acceptedTermIds);
   
+    const acceptances = acceptedTerms.map(term => {
+      return this.userTermAcceptanceRepository.create({
+        user: createdUser,
+        term,
+        acceptedAt: null,
+      });
+    });
+  
+    await this.userTermAcceptanceRepository.save(acceptances);
+  
+    // Construir links de confirmação
     const linksHtml = acceptedTerms.map(term => {
       const confirmUrl = `${frontendUrl}/confirm-consent?userId=${createdUser.id}&termId=${term.id}`;
       return `<li>${term.title}: <a href="${confirmUrl}">Confirmar aceite</a></li>`;

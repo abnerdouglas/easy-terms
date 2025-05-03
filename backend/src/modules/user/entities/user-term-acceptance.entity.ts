@@ -13,6 +13,6 @@ export class UserTermAcceptanceEntity {
   @ManyToOne(() => TermEntity, { nullable: false, onDelete: 'CASCADE' })
   term: TermEntity;  
 
-  @CreateDateColumn()
-  acceptedAt: Date;
+  @CreateDateColumn({ nullable: true })
+  acceptedAt: Date | null; // Data em que o usuário aceitou o termo. Pode ser nula se o usuário não tiver aceitado o termo ainda.
 }

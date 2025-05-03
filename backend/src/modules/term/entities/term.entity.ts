@@ -1,6 +1,6 @@
 import { ApiTags } from "@nestjs/swagger";
 import { UserTermAcceptanceEntity } from "src/modules/user/entities/user-term-acceptance.entity";
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 
 @ApiTags("terms")
 @Entity({ name: "terms" })
@@ -28,7 +28,4 @@ export class TermEntity {
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: string;
-
-  @DeleteDateColumn({ name: "deleted_at" })
-  deletedAt: string;
 }

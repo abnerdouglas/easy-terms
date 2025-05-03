@@ -6,7 +6,7 @@ export class CreateTermDTO {
   @IsString()
   title: string;
 
-  @ApiProperty({ example: 'Conteúdo completo do termo...', description: 'Texto do termo de uso' })
+  @ApiProperty({ example: 'Conteúdo completo do termo', description: 'Texto do termo de uso' })
   @IsString()
   content: string;
 

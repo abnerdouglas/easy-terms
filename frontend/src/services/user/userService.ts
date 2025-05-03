@@ -1,6 +1,8 @@
+
+import { CreateUserPayload } from '../../types/user';
 import api from '../axios';
 
-export const createUser = (data: any) => {
+export const createUser = (data: CreateUserPayload) => {
   return api.post('/users', data);
 };
 

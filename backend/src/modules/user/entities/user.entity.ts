@@ -1,4 +1,4 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ApiTags } from "@nestjs/swagger";
 import { Role } from "../enums/role.enum";
@@ -24,14 +24,11 @@ export class UserEntity {
   role: Role;
 
   @OneToMany(() => UserTermAcceptanceEntity, (uta) => uta.user)
-  termAcceptances: UserTermAcceptanceEntity[];
+  termAcceptances?: UserTermAcceptanceEntity[];
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: string;
 
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: string;
-
-  @DeleteDateColumn({ name: "deleted_at" })
-  deletedAt: string;
 }

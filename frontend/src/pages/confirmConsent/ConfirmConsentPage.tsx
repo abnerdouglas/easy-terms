@@ -32,20 +32,39 @@ export default function ConfirmConsentPage() {
   if (status === 'loading') return <Spin fullscreen />;
 
   return (
-    <Card style={{ maxWidth: 600, margin: '100px auto' }}>
-      <Result
-        status={status}
-        title={
-          status === 'success'
-            ? 'Consentimento confirmado com sucesso!'
-            : 'Ocorreu um erro ao confirmar o consentimento.'
-        }
-        extra={
-          <Button type="primary" href="/">
-            Voltar para o início
-          </Button>
-        }
-      />
-    </Card>
+    <div
+      style={{
+        height: '100vh',
+        background: '#f5f5f5',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '20px',
+      }}
+    >
+      <Card
+        style={{
+          width: '100%',
+          maxWidth: 500,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          borderRadius: 12,
+        }}
+      >
+
+        <Result
+          status={status}
+          title={
+            status === 'success'
+              ? 'Consentimento confirmado com sucesso!'
+              : 'Ocorreu um erro ao confirmar o consentimento.'
+          }
+          extra={
+            <Button type="primary" href="/">
+              Voltar para o login
+            </Button>
+          }
+        />
+      </Card>
+    </div>
   );
 }

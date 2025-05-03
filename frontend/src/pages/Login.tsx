@@ -1,21 +1,24 @@
-import { Button, Form, Input, Typography, Card, message } from 'antd';
+import { Button, Form, Input, Typography, Card } from 'antd';
 import { login } from '../services/auth/authService';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { SweetAlert } from '../components/SweetAlert/SweetAlert';
 
 export default function Login() {
   const { login: authLogin } = useAuth();
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
+    SweetAlert.loading();
     try {
       const { data } = await login(values);
       localStorage.setItem('token', data.acess_token);
       authLogin?.();
-      message.success('Login realizado com sucesso');
+      
+      SweetAlert.success('Sucesso!','Login realizado com sucesso!');
       navigate('/terms');
     } catch (error) {
-      message.error('Erro ao realizar login. Verifique suas credenciais.');
+      SweetAlert.error('Erro ao realizar login. Verifique suas credenciais.');
     }
   };
 
@@ -39,10 +42,10 @@ export default function Login() {
         }}
       >
         <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: 10, color: '#1890ff' }}>
-          Easy Terms
+          EASY TERMS
         </Typography.Title>
         <Typography.Text style={{ display: 'block', textAlign: 'center', marginBottom: 24 }}>
-          Sistema de Gerenciamento de Termos de Uso e Políticas de Privacidade
+          Sistema de Gerenciamento de Termos de Uso
         </Typography.Text>
 
         <Form onFinish={onFinish} layout="vertical">
