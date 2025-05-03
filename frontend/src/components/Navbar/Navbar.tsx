@@ -29,6 +29,7 @@ export default function NavbarLayout({ children }: { children: React.ReactNode }
     { key: '/terms', icon: <FileTextOutlined />, label: 'Termos' },
     { key: '/users', icon: <UserOutlined />, label: 'Usuários' },
     { key: '/termsAcceptance', icon: <FileTextOutlined />, label: 'Termos Aceitos' },
+    { key: '/history', icon: <FileTextOutlined />, label: 'Histórico' },
     { key: 'logout', icon: <LogoutOutlined />, label: 'Sair' },
   ];
 

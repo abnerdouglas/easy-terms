@@ -6,6 +6,7 @@ import TermsAcceptancePage from './pages/termsAcceptance/TermsAcceptancePage';
 import ConfirmConsentPage from './pages/confirmConsent/ConfirmConsentPage';
 import PrivateRoutes from './routes/PrivateRoutes';
 import CreateUserPage from './pages/users/CreateUserPage';
+import HistoryPage from './pages/history/HistoryPage';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/users" element={<UserPage />} />
         <Route path="/termsAcceptance" element={<TermsAcceptancePage />} />
+        <Route path="/history" element={<HistoryPage />} />
       </Route>
     </Routes>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Form, Input, Select, Button, Card, Checkbox, Typography } from 'antd';
+import { Form, Input, Select, Button, Card, Checkbox, Typography, Col, Row } from 'antd';
 import { createUser } from '../../services/user/userService';
 import { getTerms } from '../../services/term/termService';
 import { CreateUserPayload } from '../../types/user';
@@ -61,7 +61,7 @@ export default function CreateUserPage() {
         <div
             style={{
                 background: 'linear-gradient(to right, #e0eafc, #cfdef3)',
-                height: '150vh',
+                height: '100vh',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -77,51 +77,68 @@ export default function CreateUserPage() {
                 }}>
                 <Form form={form} onFinish={onSubmit} layout="vertical">
 
-                    <Form.Item
-                        label="Nome"
-                        name="name"
-                        rules={[{ required: true, message: 'Por favor, insira o nome.' }]}
-                    >
-                        <Input placeholder="Digite um nome de usuário" />
-                    </Form.Item>
+                    <Row gutter={16}>
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item
+                                label="Nome"
+                                name="name"
+                                rules={[{ required: true, message: 'Por favor, insira o nome.' }]}
+                            >
+                                <Input placeholder="Digite um nome de usuário" />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item
-                        label="E-mail"
-                        name="email"
-                        rules={[
-                            { required: true, message: 'Por favor, insira o e-mail.' },
-                            { type: 'email', message: 'Formato de e-mail inválido.' }
-                        ]}
-                    >
-                        <Input placeholder='Digite um e-mail para o usuário' />
-                    </Form.Item>
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item
+                                label="E-mail"
+                                name="email"
+                                rules={[
+                                    { required: true, message: 'Por favor, insira o e-mail.' },
+                                    { type: 'email', message: 'Formato de e-mail inválido.' }
+                                ]}
+                            >
+                                <Input placeholder="Digite um e-mail para o usuário" />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item
-                        label="Senha"
-                        name="password"
-                        rules={[{ required: true, message: 'Por favor, insira a senha.' }]}
-                    >
-                        <Input.Password  placeholder='Crie uma senha para o usuário'/>
-                    </Form.Item>
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item
+                                label="Senha"
+                                name="password"
+                                rules={[{ required: true, message: 'Por favor, insira a senha.' }]}
+                            >
+                                <Input.Password placeholder="Crie uma senha para o usuário" />
+                            </Form.Item>
+                        </Col>
 
-                    <Form.Item
-                        label="Função"
-                        name="role"
-                        rules={[{ required: true, message: 'Por favor, selecione uma função.' }]}
-                    >
-                        <Select placeholder="Selecione uma função">
-                            <Option value="ADMIN">Administrador</Option>
-                            <Option value="EMPLOYEE">Funcionário</Option>
-                        </Select>
-                    </Form.Item>
-
+                        <Col xs={24} sm={24} md={12}>
+                            <Form.Item
+                                label="Função"
+                                name="role"
+                                rules={[{ required: true, message: 'Por favor, selecione uma função.' }]}
+                            >
+                                <Select placeholder="Selecione uma função">
+                                    <Option value="ADMIN">Administrador</Option>
+                                    <Option value="EMPLOYEE">Funcionário</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
                     <Form.Item
                         label="Termos de consentimento"
                         name="acceptedTermIds"
                         initialValue={[]}
                     >
-                         <Checkbox.Group style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Checkbox.Group
+                            style={{
+                                display: 'flex',
+                          
+                                maxHeight: 200,
+                                overflowY: 'auto',
+                                paddingRight: 8
+                            }}
+                        >
                             {terms.map((term: any) => (
                                 <Checkbox key={term.id} value={term.id} style={{ marginBottom: 12 }}>
                                     <div style={{ display: 'flex', flexDirection: 'column' }}>
