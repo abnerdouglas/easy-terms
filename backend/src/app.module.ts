@@ -10,6 +10,7 @@ import { AuthenticationModule } from "./modules/auth/authentication.module";
 import { TermModule } from "./modules/term/term.module";
 import { HistoryModule } from "./modules/history/history.module";
 import { EmailModule } from "./modules/email/email.module";
+import { UserTermAcceptanceModule } from "./modules/acceptance/user-term-acceptance.module";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { EmailModule } from "./modules/email/email.module";
     TermModule,
     HistoryModule,
     EmailModule,
+    UserTermAcceptanceModule
   ],
   controllers: [],
   providers: [

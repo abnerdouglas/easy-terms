@@ -1,5 +1,5 @@
 import { ApiTags } from "@nestjs/swagger";
-import { UserTermAcceptanceEntity } from "src/modules/user/entities/user-term-acceptance.entity";
+import { UserTermAcceptanceEntity } from "src/modules/acceptance/entities/user-term-acceptance.entity";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 
 @ApiTags("terms")

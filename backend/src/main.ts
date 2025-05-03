@@ -15,7 +15,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: "*",
+    origin: "http://localhost:5173",
   });
 
   const config = new DocumentBuilder()

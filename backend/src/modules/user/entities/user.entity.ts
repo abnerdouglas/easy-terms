@@ -2,7 +2,7 @@ import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedCol
 import { Exclude } from "class-transformer";
 import { ApiTags } from "@nestjs/swagger";
 import { Role } from "../enums/role.enum";
-import { UserTermAcceptanceEntity } from "./user-term-acceptance.entity";
+import { UserTermAcceptanceEntity } from "src/modules/acceptance/entities/user-term-acceptance.entity";
 
 @ApiTags("users")
 @Entity({ name: "users" })

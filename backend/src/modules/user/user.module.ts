@@ -4,7 +4,7 @@ import { UserEntity } from "./entities/user.entity";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { UniqueEmailValidator } from "./validation/UniqueEmail.validation";
-import { UserTermAcceptanceEntity } from "./entities/user-term-acceptance.entity";
+import { UserTermAcceptanceEntity } from "../acceptance/entities/user-term-acceptance.entity";
 import { TermModule } from "../term/term.module";
 import { HistoryModule } from "../history/history.module";
 import { EmailModule } from "../email/email.module";

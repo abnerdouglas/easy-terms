@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import './sweetalert-theme.css'; // você pode personalizar ainda mais aqui se quiser
+import './sweetalert-theme.css';
 
 const defaultStyles = {
   customClass: {
@@ -48,6 +48,15 @@ export const SweetAlert = {
       didOpen: () => {
         Swal.showLoading();
       },
+      ...defaultStyles,
+    }),
+
+  warning: (title: string, text?: string) =>
+    Swal.fire({
+      icon: 'warning',
+      title,
+      html: text || 'Atenção!',
+      confirmButtonText: 'OK',
       ...defaultStyles,
     }),
 

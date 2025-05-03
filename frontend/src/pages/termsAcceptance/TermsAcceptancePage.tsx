@@ -1,4 +1,4 @@
-import { Table, Card, Typography } from 'antd';
+import { Table, Card, Typography, Tag, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { getTermsAcceptanced } from '../../services/termsAcceptance/termsAcceptanceService';
 
@@ -12,7 +12,7 @@ export default function TermsAcceptancePage() {
         setLoading(true);
         try {
             const response = await getTermsAcceptanced();
-            setLogs(response.data); // ajuste se a API retornar { data: [...] }
+            setLogs(response.data);
         } catch {
             console.error('Erro ao buscar histórico de termos aceitos');
         } finally {
@@ -26,20 +26,38 @@ export default function TermsAcceptancePage() {
 
     const columns = [
         {
+            title: 'Usuário',
+            dataIndex: ['user', 'name'],
+            key: 'userName',
+        },
+        {
+            title: 'E-mail',
+            dataIndex: ['user', 'email'],
+            key: 'userEmail',
+        },
+        {
+            title: 'Termo',
+            dataIndex: ['term', 'title'],
+            key: 'termTitle',
+        },
+        {
+            title: 'Versão',
+            dataIndex: ['term', 'version'],
+            key: 'termVersion',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'acceptedAt',
+            key: 'status',
+            render: (value: string | null) =>
+                value ? <Tag color="green">Confirmado</Tag> : <Tag color="orange">Pendente</Tag>,
+        },
+        {
             title: 'Data de aceitação',
             dataIndex: 'acceptedAt',
             key: 'acceptedAt',
-            render: (value: string) => new Date(value).toLocaleString('pt-BR'),
-        },
-        {
-            title: 'Nome Usuário',
-            dataIndex: '',
-            key: '',
-        },
-        {
-            title: 'Termo Aceito',
-            dataIndex: '',
-            key: '',
+            render: (value: string | null) =>
+                value ? new Date(value).toLocaleString('pt-BR') : '-',
         },
     ];
 
@@ -54,7 +72,13 @@ export default function TermsAcceptancePage() {
                     loading={loading}
                     pagination={{ pageSize: 6 }}
                 />
+
+                <Button onClick={fetchLogs} type="primary">
+                    Atualizar Histórico
+                </Button>
             </Card>
+
+
         </div>
     );
 }

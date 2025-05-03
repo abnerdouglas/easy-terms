@@ -19,8 +19,8 @@ export class UserController {
 
   @Post()
   @Roles(Role.ADMIN, Role.EMPLOYEE)
-  @ApiOperation({ summary: "Create user" })
-  @ApiResponse({ status: 201, description: "User created sucessfully." })
+  @ApiOperation({ summary: "Cria um usuário" })
+  @ApiResponse({ status: 201, description: "Usuário criado com sucesso." })
   async createUser(
 
     @Body() { name, email, role, acceptedTermIds }: CreateUserDTO,
@@ -49,7 +49,7 @@ export class UserController {
 
   @Get()
   @Roles(Role.ADMIN, Role.EMPLOYEE)
-  @ApiOperation({ summary: "List all users" })
+  @ApiOperation({ summary: "Lista todos os usuários" })
   @ApiResponse({ status: 200, description: "Return all users." })
   @ApiResponse({ status: 403, description: "Forbidden." })
   async listUsers() {
@@ -63,7 +63,7 @@ export class UserController {
 
   @Put("/:id")
   @Roles(Role.ADMIN, Role.EMPLOYEE)
-  @ApiOperation({ summary: "Update user" })
+  @ApiOperation({ summary: "Atualiza um usuário" })
   async updateUser(@Param("id") id: string, @Body() newData: UpdateUserDTO) {
     const userUpdated = await this.userService.updateUser(id, newData);
 
@@ -75,7 +75,7 @@ export class UserController {
 
   @Delete("/:id")
   @Roles(Role.ADMIN)
-  @ApiOperation({ summary: "Delete user" })
+  @ApiOperation({ summary: "Exclui um usuário" })
   async removeUser(@Param("id", new ParseUUIDPipe()) id: string) {
     const userRemoved = await this.userService.deleteUser(id);
 

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from "typeorm";
-import { UserEntity } from "./user.entity";
 import { TermEntity } from "src/modules/term/entities/term.entity";
+import { UserEntity } from "src/modules/user/entities/user.entity";
 
 @Entity({ name: "user_term_acceptances" })
 export class UserTermAcceptanceEntity {

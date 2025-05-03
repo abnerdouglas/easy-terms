@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { UserEntity } from "./entities/user.entity";
 import { CreateUserDTO } from "./dto/CreateUser.dto";
 import { ListUsersDTO } from "./dto/ListUser.dto";
@@ -11,7 +11,7 @@ import { HistoryEntity } from "../history/enums/history-entity.enum";
 import { EmailService } from "../email/email.service";
 import { TermEntity } from "../term/entities/term.entity";
 import { ConfigService } from "@nestjs/config";
-import { UserTermAcceptanceEntity } from "./entities/user-term-acceptance.entity";
+import { UserTermAcceptanceEntity } from "../acceptance/entities/user-term-acceptance.entity";
 
 @Injectable()
 export class UserService {
@@ -28,23 +28,30 @@ export class UserService {
     private readonly userTermAcceptanceRepository: Repository<UserTermAcceptanceEntity>,
 
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async createUser(data: CreateUserDTO) {
     const userEntity = this.userRepository.create(data);
     const createdUser = await this.userRepository.save(userEntity);
     const frontendUrl = this.configService.get<string>('FRONT_URL');
-  
+
     await this.historyService.log(
       HistoryAction.CREATE_USER,
       HistoryEntity.USER,
       createdUser.id,
       createdUser,
     );
-  
-    // Buscar todos os termos assinalados de uma vez
-    const acceptedTerms = await this.termRepository.findByIds(data.acceptedTermIds);
-  
+
+    // Se não houver termos aceitos, encerra aqui
+    if (!data.acceptedTermIds || data.acceptedTermIds.length === 0) {
+      return createdUser;
+    }
+
+    // Buscar os termos assinalados
+    const acceptedTerms = await this.termRepository.findBy({
+      id: In(data.acceptedTermIds),
+    });
+
     const acceptances = acceptedTerms.map(term => {
       return this.userTermAcceptanceRepository.create({
         user: createdUser,
@@ -52,36 +59,36 @@ export class UserService {
         acceptedAt: null,
       });
     });
-  
+
     await this.userTermAcceptanceRepository.save(acceptances);
-  
+
     // Construir links de confirmação
     const linksHtml = acceptedTerms.map(term => {
       const confirmUrl = `${frontendUrl}/confirm-consent?userId=${createdUser.id}&termId=${term.id}`;
       return `<li>${term.title}: <a href="${confirmUrl}">Confirmar aceite</a></li>`;
     }).join('');
-  
+
     const emailHtml = `
       <p>Olá ${createdUser.name},</p>
       <p>Você assinalou os seguintes termos ao se cadastrar:</p>
       <ul>${linksHtml}</ul>
       <p>Clique nos links acima para confirmar seu consentimento individualmente.</p>
     `;
-  
+
     await this.emailService.sendEmail(
       createdUser.email,
       "Confirmação dos termos assinalados",
       emailHtml,
     );
-  
+
     return createdUser;
-  }  
+  }
 
   async listUsers() {
     const usersSaved = await this.userRepository.find();
     const usersList = usersSaved.map(
       (user) => new ListUsersDTO(
-        user.id, 
+        user.id,
         user.name,
         user.email,
         user.role,
@@ -125,7 +132,7 @@ export class UserService {
 
     return user;
   }
-  
+
   async getUserByEmail(email: string) {
     try {
       const user = await this.userRepository.findOne({

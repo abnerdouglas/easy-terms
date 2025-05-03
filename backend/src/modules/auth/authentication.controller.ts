@@ -9,7 +9,7 @@ export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post("login")
-  @ApiOperation({ summary: "Sign in user" })
+  @ApiOperation({ summary: "Autenticação do usuário" })
   login(@Body() { email, password }: AuthDTO) {
     return this.authenticationService.login(email, password);
   }

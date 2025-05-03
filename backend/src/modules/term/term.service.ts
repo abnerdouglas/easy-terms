@@ -9,7 +9,7 @@ import { HistoryAction } from "../history/enums/history-action.enum";
 import { HistoryService } from "../history/history.service";
 import { HistoryEntity } from "../history/enums/history-entity.enum";
 import { ConfirmConsentDTO } from "./dto/confirm-consent.dto";
-import { UserTermAcceptanceEntity } from "../user/entities/user-term-acceptance.entity";
+import { UserTermAcceptanceEntity } from "../acceptance/entities/user-term-acceptance.entity";
 
 @Injectable()
 export class TermService {
