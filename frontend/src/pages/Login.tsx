@@ -3,22 +3,31 @@ import { login } from '../services/auth/authService';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { SweetAlert } from '../components/SweetAlert/SweetAlert';
+import { LoginPayload } from '../types/user';
+
+const { Text, Link } = Typography;
 
 export default function Login() {
   const { login: authLogin } = useAuth();
   const navigate = useNavigate();
 
-  const onFinish = async (values: any) => {
+  const onSubmit = async (values: LoginPayload) => {
     SweetAlert.loading();
     try {
       const { data } = await login(values);
       localStorage.setItem('token', data.acess_token);
       authLogin?.();
-      
-      SweetAlert.success('Sucesso!','Login realizado com sucesso!');
+
+      SweetAlert.success('Sucesso!', 'Login realizado com sucesso!');
       navigate('/terms');
-    } catch (error) {
-      SweetAlert.error('Erro ao realizar login. Verifique suas credenciais.');
+    } catch (error: any) {
+      const apiError = error?.response?.data;
+
+      const errorMessages = Array.isArray(apiError?.message)
+        ? apiError.message.join('<br/>') // quebra de linha no HTML
+        : apiError?.message || 'Erro ao realizar login';
+
+      SweetAlert.error('Erro', errorMessages);
     }
   };
 
@@ -41,14 +50,14 @@ export default function Login() {
           background: '#ffffffee',
         }}
       >
-        <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: 10, color: '#1890ff' }}>
-          EASY TERMS
+        <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: 10, color: '#001529' }}>
+          Easy Terms
         </Typography.Title>
         <Typography.Text style={{ display: 'block', textAlign: 'center', marginBottom: 24 }}>
           Sistema de Gerenciamento de Termos de Uso
         </Typography.Text>
 
-        <Form onFinish={onFinish} layout="vertical">
+        <Form onFinish={onSubmit} layout="vertical">
           <Form.Item
             label="E-mail"
             name="email"
@@ -66,10 +75,16 @@ export default function Login() {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" block>
+            <Button type="primary" htmlType="submit" size="large" block style={{ background: '#001529' }}>
               Entrar
             </Button>
           </Form.Item>
+
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <Text>Não possui uma conta? </Text>
+            <Link onClick={() => navigate('/user/create')}>Clique aqui para criar uma nova.</Link>
+          </div>
+
         </Form>
       </Card>
     </div>

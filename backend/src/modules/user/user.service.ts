@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
 import { UserEntity } from "./entities/user.entity";
@@ -133,14 +133,51 @@ export class UserService {
     return user;
   }
 
+  async validateUser(email: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['termAcceptances', 'termAcceptances.term'],
+    });
+  
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+  
+    // 🚫 Bloquear se houver termos com acceptedAt null
+    const hasPendingTerms = (user.termAcceptances ?? []).some(
+      (acceptance) => acceptance.acceptedAt === null,
+    );
+  
+    if (hasPendingTerms) {
+      throw new UnauthorizedException(
+        'Você possui termos de consentimento pendentes de confirmação. Verifique seu e-mail.',
+      );
+    }
+  
+    return user;
+  }
+  
+
   async getUserByEmail(email: string) {
     try {
       const user = await this.userRepository.findOne({
-        where: { email }
+        where: { email },
+        relations: ['termAcceptances', 'termAcceptances.term'],
       });
 
       if (!user) {
         throw new NotFoundException(`Usuário com email ${email} não encontrado`);
+      }
+    
+      // 🚫 Bloquear se houver termos com acceptedAt null
+      const hasPendingTerms = (user.termAcceptances ?? []).some(
+        (acceptance) => acceptance.acceptedAt === null,
+      );
+    
+      if (hasPendingTerms) {
+        throw new UnauthorizedException(
+          'Você possui termos de consentimento pendentes de confirmação. Verifique seu e-mail.',
+        );
       }
 
       return user;

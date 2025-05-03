@@ -75,57 +75,68 @@ export default function TermsPage() {
   ];
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px' }}>
-      <Card title="Cadastrar Novo Termo" style={{ marginBottom: 24 }}>
-        <Form form={form} onFinish={onSubmit} layout="vertical">
-
-          <Form.Item
-            label="Título"
-            name="title"
-            rules={[{ required: true, message: 'Por favor, insira o título.' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Conteúdo"
-            name="content"
-            rules={[{ required: true, message: 'Por favor, insira o conteúdo do termo.' }]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-
-          <Form.Item
-            label="Versão"
-            name="version"
-            rules={[{ required: true, message: 'Por favor, insira a versão.' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Ativo"
-            name="isActive"
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit">Salvar</Button>
-          </Form.Item>
-        </Form>
-      </Card>
-
-      <Card title="Termos Cadastrados">
-        <Table
-          columns={columns}
-          dataSource={terms}
-          rowKey="id"
-          loading={loading}
-          pagination={{ pageSize: 5 }}
-        />
-      </Card>
+    <div style={{ maxWidth: '100%', padding: '20px' }}>
+      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+        {/* Card do formulário */}
+        <Card
+          title="Cadastrar Novo Termo"
+          style={{ flex: 1, minWidth: 300 }}
+        >
+          <Form form={form} onFinish={onSubmit} layout="vertical">
+            <Form.Item
+              label="Título"
+              name="title"
+              rules={[{ required: true, message: 'Por favor, insira o título.' }]}
+            >
+              <Input />
+            </Form.Item>
+  
+            <Form.Item
+              label="Conteúdo"
+              name="content"
+              rules={[{ required: true, message: 'Por favor, insira o conteúdo do termo.' }]}
+            >
+              <Input.TextArea rows={4} />
+            </Form.Item>
+  
+            <Form.Item
+              label="Versão"
+              name="version"
+              rules={[{ required: true, message: 'Por favor, insira a versão.' }]}
+            >
+              <Input />
+            </Form.Item>
+  
+            <Form.Item
+              label="Ativo"
+              name="isActive"
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
+  
+            <Form.Item>
+              <Button type="primary" htmlType="submit" style={{ background: '#001529' }}>
+                Salvar
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+  
+        {/* Card da Tabela */}
+        <Card
+          title="Termos Cadastrados"
+          style={{ flex: 2 }}
+        >
+          <Table
+            columns={columns}
+            dataSource={terms}
+            rowKey="id"
+            loading={loading}
+            pagination={{ pageSize: 5 }}
+          />
+        </Card>
+      </div>
     </div>
   );
-}
+}  

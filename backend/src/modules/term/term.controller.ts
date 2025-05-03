@@ -52,7 +52,6 @@ export class TermController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: "Lista todos os termos" })
   @ApiResponse({ status: 200, description: "Retorna todos os termos" })

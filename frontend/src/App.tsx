@@ -5,13 +5,15 @@ import UserPage from './pages/users/UserPage';
 import TermsAcceptancePage from './pages/termsAcceptance/TermsAcceptancePage';
 import ConfirmConsentPage from './pages/confirmConsent/ConfirmConsentPage';
 import PrivateRoutes from './routes/PrivateRoutes';
+import CreateUserPage from './pages/users/CreateUserPage';
 
 export default function App() {
   return (
     <Routes>
       {/* Rota pública (sem autenticação, sem layout) */}
-      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/confirm-consent" element={<ConfirmConsentPage />} />
+      <Route path="/user/create" element={<CreateUserPage />} />
 
       {/* Rotas privadas (com Navbar e auth obrigatória) */}
       <Route element={<PrivateRoutes />}>

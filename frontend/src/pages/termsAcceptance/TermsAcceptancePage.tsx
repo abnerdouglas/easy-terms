@@ -62,7 +62,7 @@ export default function TermsAcceptancePage() {
     ];
 
     return (
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: 24 }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: 24 }}>
             <Card>
                 <Title level={3}>Histórico de Termos Aceitos</Title>
                 <Table

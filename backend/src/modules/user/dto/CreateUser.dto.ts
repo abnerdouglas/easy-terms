@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsUUID, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, MinLength } from "class-validator";
 import { UniqueEmail } from "../validation/UniqueEmail.validation";
 import { Role } from "../enums/role.enum";
 import { ApiProperty } from "@nestjs/swagger";
@@ -23,8 +23,6 @@ export class CreateUserDTO {
   role: Role;
 
   @ApiProperty({ example: "[\"termId1\", \"termId2\"]", description: 'IDs dos termos que o usuário aceitou' })
-  @IsArray()
   @IsOptional()
-  @IsUUID('all', { each: true })
   acceptedTermIds: string[]; // ← IDs dos termos que o usuário aceitou
 }

@@ -58,8 +58,9 @@ export default function ConfirmConsentPage() {
               ? 'Consentimento confirmado com sucesso!'
               : 'Ocorreu um erro ao confirmar o consentimento.'
           }
+          subTitle={'A partir de agora, você está de acordo com os termos. A qualquer momento, você pode revogar seu consentimento.'}
           extra={
-            <Button type="primary" href="/">
+            <Button type="primary" href="/login" style={{ background: '#001529' }}>
               Voltar para o login
             </Button>
           }

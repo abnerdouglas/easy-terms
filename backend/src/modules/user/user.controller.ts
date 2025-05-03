@@ -10,7 +10,6 @@ import { RolesGuard } from "../auth/guards/role.guard";
 import { Roles } from "../auth/decorators/role.decorator";
 import { Role } from "./enums/role.enum";
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller("/users")
 @ApiTags("users")
 @ApiBearerAuth()
@@ -48,6 +47,7 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.EMPLOYEE)
   @ApiOperation({ summary: "Lista todos os usuários" })
   @ApiResponse({ status: 200, description: "Return all users." })
@@ -62,6 +62,7 @@ export class UserController {
   }
 
   @Put("/:id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.EMPLOYEE)
   @ApiOperation({ summary: "Atualiza um usuário" })
   async updateUser(@Param("id") id: string, @Body() newData: UpdateUserDTO) {
@@ -74,6 +75,7 @@ export class UserController {
   }
 
   @Delete("/:id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: "Exclui um usuário" })
   async removeUser(@Param("id", new ParseUUIDPipe()) id: string) {

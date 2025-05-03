@@ -2,8 +2,9 @@
 import { CreateUserPayload } from '../../types/user';
 import api from '../axios';
 
-export const createUser = (data: CreateUserPayload) => {
-  return api.post('/users', data);
+export const createUser = async (payload: CreateUserPayload) => {
+  const response = await api.post('/users', payload);
+  return response.data.user; // extrai apenas o objeto user
 };
 
 export const getUsers = () => {

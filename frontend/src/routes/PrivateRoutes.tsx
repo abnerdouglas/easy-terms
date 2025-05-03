@@ -6,7 +6,7 @@ export default function PrivateRoutes() {
   const { authenticated } = useAuth();
 
   if (!authenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return (
