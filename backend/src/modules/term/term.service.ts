@@ -10,6 +10,7 @@ import { HistoryService } from "../history/history.service";
 import { HistoryEntity } from "../history/enums/history-entity.enum";
 import { ConfirmConsentDTO } from "./dto/confirm-consent.dto";
 import { UserTermAcceptanceEntity } from "../acceptance/entities/user-term-acceptance.entity";
+import { EmailService } from "../email/email.service";
 
 @Injectable()
 export class TermService {
@@ -20,6 +21,8 @@ export class TermService {
 
     @InjectRepository(UserTermAcceptanceEntity)
     private readonly userTermAcceptanceRepository: Repository<UserTermAcceptanceEntity>,
+
+    private readonly emailService: EmailService,
   ) {}
 
   async createTerm(data: CreateTermDTO) {
@@ -44,7 +47,7 @@ export class TermService {
         user: { id: userId },
         term: { id: termId },
       },
-      relations: ['user', 'term'], // necessário para buscar por campos aninhados
+      relations: ['user', 'term'],
     });
   
     if (!existing) {
@@ -72,14 +75,49 @@ export class TermService {
 
   async updateTerm(id: string, newData: UpdateTermDTO) {
     const term = await this.termRepository.findOneBy({ id });
-
-    if (term === null)
+  
+    if (!term) {
       throw new NotFoundException("O termo não foi encontrado.");
-
+    }
+  
     Object.assign(term, newData as TermEntity);
-
-    return this.termRepository.save(term);
-  }
+    const updatedTerm = await this.termRepository.save(term);
+  
+    // Buscar todos os usuários que aceitaram esse termo
+    const acceptances = await this.userTermAcceptanceRepository.find({
+      where: { term: { id } },
+      relations: ['user'],
+    });
+  
+    if (!acceptances.length) {
+      return updatedTerm;
+    }
+  
+    const emailPromises = acceptances.map(async acceptance => {
+      const user = acceptance.user;
+  
+      const emailHtml = `
+        <p>Olá ${user.name},</p>
+        <p>O termo <strong>${term.title} (v${term.version})</strong> foi atualizado recentemente.</p>
+        <p>O novo conteúdo do termo é:</p>
+        <p>${term.content}</p>
+        <p>Esta é apenas uma notificação informativa. Não é necessário nenhuma ação de sua parte.</p>
+        <p>Caso queira revogar o consentimento para este termo, acesse sua área de usuário.</p>
+        <p>Atenciosamente,</p>
+        <p>Equipe Easy Terms</p>
+      `;
+  
+      await this.emailService.sendEmail(
+        user.email,
+        `Atualização do termo: ${term.title}`,
+        emailHtml,
+      );
+    });
+  
+    await Promise.all(emailPromises);
+  
+    return updatedTerm;
+  }  
 
   async deleteTerm(id: string) {
     const term = await this.termRepository.findOneBy({ id });

@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Button, Card, Result, Spin } from 'antd';
-import api from '../../services/axios';
+import { confirmConsent } from '../../services/termsAcceptance/termsAcceptanceService';
 
 export default function ConfirmConsentPage() {
   const [searchParams] = useSearchParams();
@@ -18,7 +18,7 @@ export default function ConfirmConsentPage() {
       }
 
       try {
-        await api.post('/terms/consent/confirm', { userId, termId });
+        await confirmConsent(userId, termId);
         setStatus('success');
       } catch (err) {
         console.error(err);

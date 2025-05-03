@@ -1,13 +1,48 @@
 import { useEffect, useState } from 'react';
 import { Table, Form, Input, Switch, Button, Card, Tag } from 'antd';
-import { createTerm, getTerms } from '../../services/term/termService';
-import { CreateTermPayload } from '../../types/term';
+import { createTerm, getTerms, updateTerm, deleteTerm } from '../../services/term/termService';
+import { CreateTermPayload, UpdateTermPayload } from '../../types/term';
 import { SweetAlert } from '../../components/SweetAlert/SweetAlert';
+import { EditTermModal } from '../../components/EditTermModal/EditTermModal';
+import { Popconfirm } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 export default function TermsPage() {
   const [form] = Form.useForm();
   const [terms, setTerms] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedTerm, setSelectedTerm] = useState<UpdateTermPayload>({} as UpdateTermPayload);
+
+  const handleEdit = (term: any) => {
+    setSelectedTerm(term);
+    setEditModalOpen(true);
+  };
+
+  const handleUpdateTerm = async (values: UpdateTermPayload) => {
+    SweetAlert.loading();
+    
+    try {
+      await updateTerm(selectedTerm.id, values); // ou `updateTerm` se tiver
+      SweetAlert.success('Atualizado com sucesso!', 'O termo foi atualizado.');
+      setEditModalOpen(false);
+      fetchTerms();
+    } catch {
+      SweetAlert.error('Erro ao atualizar termo', 'Tente novamente.');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    SweetAlert.loading();
+    try {
+      await deleteTerm(id);
+      SweetAlert.success('Termo excluído', 'O termo foi removido com sucesso.');
+      fetchTerms();
+    } catch {
+      SweetAlert.error('Erro ao excluir termo', 'Tente novamente.');
+    }
+  };  
 
   const fetchTerms = async () => {
     setLoading(true);
@@ -72,6 +107,26 @@ export default function TermsPage() {
       key: 'createdAt',
       render: (value: string) => new Date(value).toLocaleString('pt-BR'),
     },
+    {
+      title: 'Ações',
+      key: 'actions',
+      render: (_: any, record: any) => (
+        <div style={{ display: 'flex', gap: 12 }}>
+          <EditOutlined
+            style={{ color: '#1890ff', cursor: 'pointer' }}
+            onClick={() => handleEdit(record)}
+          />
+          <Popconfirm
+            title="Tem certeza que deseja excluir?"
+            okText="Sim"
+            cancelText="Não"
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} />
+          </Popconfirm>
+        </div>
+      )
+    }    
   ];
 
   return (
@@ -90,7 +145,7 @@ export default function TermsPage() {
             >
               <Input />
             </Form.Item>
-  
+
             <Form.Item
               label="Conteúdo"
               name="content"
@@ -98,7 +153,7 @@ export default function TermsPage() {
             >
               <Input.TextArea rows={4} />
             </Form.Item>
-  
+
             <Form.Item
               label="Versão"
               name="version"
@@ -106,7 +161,7 @@ export default function TermsPage() {
             >
               <Input />
             </Form.Item>
-  
+
             <Form.Item
               label="Ativo"
               name="isActive"
@@ -114,7 +169,7 @@ export default function TermsPage() {
             >
               <Switch />
             </Form.Item>
-  
+
             <Form.Item>
               <Button type="primary" htmlType="submit" style={{ background: '#001529' }}>
                 Salvar
@@ -122,7 +177,7 @@ export default function TermsPage() {
             </Form.Item>
           </Form>
         </Card>
-  
+
         {/* Card da Tabela */}
         <Card
           title="Termos Cadastrados"
@@ -136,6 +191,14 @@ export default function TermsPage() {
             pagination={{ pageSize: 5 }}
           />
         </Card>
+
+        <EditTermModal
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          onSubmit={handleUpdateTerm}
+          initialValues={selectedTerm || undefined}
+        />
+
       </div>
     </div>
   );

@@ -57,6 +57,7 @@ export class UserService {
         user: createdUser,
         term,
         acceptedAt: null,
+        version: term.version,
       });
     });
 
@@ -73,6 +74,9 @@ export class UserService {
       <p>Você assinalou os seguintes termos ao se cadastrar:</p>
       <ul>${linksHtml}</ul>
       <p>Clique nos links acima para confirmar seu consentimento individualmente.</p>
+      <p>Se você não reconhece essa ação, este e-mail pode ser ignorado.</p>
+      <p>Atenciosamente,</p>
+      <p>Equipe Easy Terms</p>
     `;
 
     await this.emailService.sendEmail(

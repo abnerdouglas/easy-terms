@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import TermsPage from './pages/terms/TermsPage';
 import UserPage from './pages/users/UserPage';
@@ -11,6 +11,7 @@ export default function App() {
   return (
     <Routes>
       {/* Rota pública (sem autenticação, sem layout) */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/confirm-consent" element={<ConfirmConsentPage />} />
       <Route path="/user/create" element={<CreateUserPage />} />

@@ -7,7 +7,7 @@ import {
   MenuFoldOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 
 const { Sider, Content, Header } = Layout;

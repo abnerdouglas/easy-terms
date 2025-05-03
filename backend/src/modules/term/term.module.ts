@@ -5,12 +5,16 @@ import { TermController } from "./term.controller";
 import { TermService } from "./term.service";
 import { HistoryModule } from "../history/history.module";
 import { UserTermAcceptanceEntity } from "../acceptance/entities/user-term-acceptance.entity";
+import { EmailModule } from "../email/email.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TermEntity, UserTermAcceptanceEntity]), HistoryModule],
+  imports: [TypeOrmModule.forFeature([TermEntity, UserTermAcceptanceEntity]),
+    HistoryModule,
+    EmailModule
+  ],
   controllers: [TermController],
   providers: [TermService],
   exports: [TermService],
 })
 
-export class TermModule {}
+export class TermModule { }

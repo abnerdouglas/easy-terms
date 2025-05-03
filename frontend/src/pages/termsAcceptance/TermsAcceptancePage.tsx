@@ -1,12 +1,16 @@
 import { Table, Card, Typography, Tag, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { getTermsAcceptanced } from '../../services/termsAcceptance/termsAcceptanceService';
+import { RevokeConsentModal } from '../../components/RevokeConsentModal/RevokeConsentModal';
+import { revokeConsent } from '../../services/termsAcceptance/termsAcceptanceService';
 
 const { Title } = Typography;
 
 export default function TermsAcceptancePage() {
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [selectedLog, setSelectedLog] = useState<any | null>(null);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const fetchLogs = async () => {
         setLoading(true);
@@ -23,6 +27,23 @@ export default function TermsAcceptancePage() {
     useEffect(() => {
         fetchLogs();
     }, []);
+
+    const openModal = (log: any) => {
+        setSelectedLog(log);
+        setModalOpen(true);
+    };
+
+    const handleRevoke = async () => {
+        if (!selectedLog) return;
+        try {
+            await revokeConsent(selectedLog.id);
+            setModalOpen(false);
+            setSelectedLog(null);
+            fetchLogs();
+        } catch (err) {
+            console.error('Erro ao revogar consentimento');
+        }
+    };
 
     const columns = [
         {
@@ -47,10 +68,16 @@ export default function TermsAcceptancePage() {
         },
         {
             title: 'Status',
-            dataIndex: 'acceptedAt',
             key: 'status',
-            render: (value: string | null) =>
-                value ? <Tag color="green">Confirmado</Tag> : <Tag color="orange">Pendente</Tag>,
+            render: (_: any, record: any) => {
+                if (record.revokedAt) {
+                    return <Tag color="red">Termo Revogado</Tag>;
+                } else if (record.acceptedAt) {
+                    return <Tag color="green">Termo Aceito</Tag>;
+                } else {
+                    return <Tag color="orange">Termo Pendente</Tag>;
+                }
+            },
         },
         {
             title: 'Data de aceitação',
@@ -59,7 +86,29 @@ export default function TermsAcceptancePage() {
             render: (value: string | null) =>
                 value ? new Date(value).toLocaleString('pt-BR') : '-',
         },
+        {
+            title: 'Data de revogação',
+            dataIndex: 'revokedAt',
+            key: 'revokedAt',
+            render: (value: string | null) =>
+                value ? new Date(value).toLocaleString('pt-BR') : '-',
+        },
+        {
+            title: 'Ações',
+            key: 'actions',
+            render: (_: any, record: any) => (
+                <Button
+                    danger
+                    size="small"
+                    onClick={() => openModal(record)}
+                    disabled={!record.acceptedAt || record.revokedAt}
+                >
+                    Revogar
+                </Button>
+            ),
+        },
     ];
+
 
     return (
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: 24 }}>
@@ -76,8 +125,16 @@ export default function TermsAcceptancePage() {
                 <Button onClick={fetchLogs} type="primary">
                     Atualizar Histórico
                 </Button>
-            </Card>
 
+                <RevokeConsentModal
+                    open={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                    onConfirm={handleRevoke}
+                    userName={selectedLog?.user?.name || ''}
+                    termTitle={selectedLog?.term?.title || ''}
+                />
+
+            </Card>
 
         </div>
     );

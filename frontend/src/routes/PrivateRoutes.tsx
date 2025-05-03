@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import NavbarLayout from '../components/Navbar';
+import NavbarLayout from '../components/Navbar/Navbar';
 
 export default function PrivateRoutes() {
   const { authenticated } = useAuth();
