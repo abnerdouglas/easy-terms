@@ -63,8 +63,8 @@ export default function TermsAcceptancePage() {
         },
         {
             title: 'Versão',
-            dataIndex: ['term', 'version'],
-            key: 'termVersion',
+            dataIndex: ['version'],
+            key: 'version',
         },
         {
             title: 'Status',

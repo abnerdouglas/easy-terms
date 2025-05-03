@@ -48,7 +48,6 @@ export class UserTermAcceptanceService {
 
     if (!record) return null;
 
-    record.acceptedAt = null; // Limpa a data de aceitação
     record.revokedAt = new Date(); // Define a data de revogação como a data atual
     return this.userTermAcceptanceRepository.save(record);
   }

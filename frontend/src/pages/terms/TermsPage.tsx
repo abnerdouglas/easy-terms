@@ -103,8 +103,8 @@ export default function TermsPage() {
     },
     {
       title: 'Data de Atualização',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
       render: (value: string) => new Date(value).toLocaleString('pt-BR'),
     },
     {

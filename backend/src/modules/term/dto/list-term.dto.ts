@@ -4,8 +4,8 @@ export class ListTermsDTO {
       readonly title: string,
       readonly content: string,
       readonly version: string,
-      readonly createdAt: string,
-      readonly updatedAt: string,
+      readonly createdAt: Date,
+      readonly updatedAt: Date,
       readonly isActive: boolean,
     ) {}
   }
