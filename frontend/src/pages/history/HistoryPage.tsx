@@ -30,18 +30,22 @@ export default function HistoryPage() {
         fetchLogs();
     }, []);
 
+    const actionTagMap: Record<string, { text: string; color: string }> = {
+        CREATE_USER: { text: 'Usuário criado', color: 'green' },
+        UPDATE_USER: { text: 'Usuário atualizado', color: 'blue' },
+        CREATE_TERM: { text: 'Termo criado', color: 'cyan' },
+        UPDATE_TERM: { text: 'Termo atualizado', color: 'gold' },
+    };
+
     const columns = [
         {
             title: 'Ação',
             dataIndex: 'action',
             key: 'action',
-            render: (action: string) => <Tag color="blue">{action}</Tag>,
-        },
-        {
-            title: 'Responsável',
-            dataIndex: 'performedBy',
-            key: 'performedBy',
-            render: (name: string) => name || '-',
+            render: (action: string) => {
+                const tagInfo = actionTagMap[action] ?? { text: action, color: 'default' };
+                return <Tag color={tagInfo.color}>{tagInfo.text}</Tag>;
+            },
         },
         {
             title: 'Data',

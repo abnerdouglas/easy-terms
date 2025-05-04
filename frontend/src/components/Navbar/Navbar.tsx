@@ -6,7 +6,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 
@@ -14,7 +14,8 @@ const { Sider, Content, Header } = Layout;
 
 export default function NavbarLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const location = useLocation();
+  const { logout, user } = useAuth(); // inclui user para acessar role
   const [collapsed, setCollapsed] = useState(false);
 
   const handleClick = ({ key }: { key: string }) => {
@@ -25,13 +26,15 @@ export default function NavbarLayout({ children }: { children: React.ReactNode }
     }
   };
 
-  const items = [
-    { key: '/terms', icon: <FileTextOutlined />, label: 'Termos' },
-    { key: '/users', icon: <UserOutlined />, label: 'Usuários' },
-    { key: '/termsAcceptance', icon: <FileTextOutlined />, label: 'Termos Aceitos' },
-    { key: '/history', icon: <FileTextOutlined />, label: 'Histórico' },
-    { key: 'logout', icon: <LogoutOutlined />, label: 'Sair' },
+  const menuItems = [
+    { key: '/terms', icon: <FileTextOutlined />, label: 'Termos', roles: ['ADMIN'] },
+    { key: '/users', icon: <UserOutlined />, label: 'Usuários', roles: ['ADMIN'] },
+    { key: '/termsAcceptance', icon: <FileTextOutlined />, label: 'Termos Aceitos', roles: ['ADMIN', 'EMPLOYEE'] },
+    { key: '/history', icon: <FileTextOutlined />, label: 'Histórico', roles: ['ADMIN'] },
+    { key: 'logout', icon: <LogoutOutlined />, label: 'Sair', roles: ['ADMIN', 'EMPLOYEE'] },
   ];
+
+  const filteredItems = menuItems.filter(item => item.roles.includes(user?.role ?? ''));
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -44,7 +47,7 @@ export default function NavbarLayout({ children }: { children: React.ReactNode }
           theme="dark"
           selectedKeys={[location.pathname]}
           onClick={handleClick}
-          items={items}
+          items={filteredItems}
         />
       </Sider>
 

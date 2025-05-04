@@ -115,6 +115,7 @@ export class UserService {
   }
 
   async updateUser(id: string, newData: UpdateUserDTO) {
+    
     const user = await this.userRepository.findOneBy({ id });
 
     if (user === null)
@@ -122,7 +123,16 @@ export class UserService {
 
     Object.assign(user, newData as UserEntity);
 
-    return this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+
+    await this.historyService.log(
+      HistoryAction.UPDATE_USER,
+      HistoryEntity.USER,
+      id,
+      updatedUser,
+    );
+
+    return updatedUser;
   }
 
   async deleteUser(id: string) {

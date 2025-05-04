@@ -23,7 +23,6 @@ export class HistoryService {
     return this.historyRepository.save(history);
   }
 
-
   async findAll(filters?: ListHistoryLogDTO) {
     const where: FindOptionsWhere<HistoryLogEntity> = {};
     

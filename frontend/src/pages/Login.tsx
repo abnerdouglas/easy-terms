@@ -16,10 +16,22 @@ export default function Login() {
     try {
       const { data } = await login(values);
       localStorage.setItem('token', data.acess_token);
-      authLogin?.();
+
+      authLogin({
+        access_token: data.acess_token,
+        user: data.user,
+      });
 
       SweetAlert.success('Sucesso!', 'Login realizado com sucesso!');
-      navigate('/terms');
+
+      if (data.user.role === 'ADMIN') {
+        navigate('/terms');
+      } else if (data.user.role === 'EMPLOYEE') {
+        navigate('/termsAcceptance');
+      } else {
+        navigate('/unauthorized'); // fallback
+      }
+
     } catch (error: any) {
       const apiError = error?.response?.data;
 

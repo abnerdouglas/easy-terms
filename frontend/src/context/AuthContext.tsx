@@ -1,8 +1,17 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'ADMIN' | 'EMPLOYEE';
+}
+
 interface AuthContextType {
   authenticated: boolean;
-  login: () => void;
+  user: User | null;
+  token: string | null;
+  login: (data: { access_token: string; user: User }) => void;
   logout: () => void;
 }
 
@@ -10,25 +19,41 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
       setAuthenticated(true);
     }
+
     setLoading(false);
   }, []);
 
-  const login = () => setAuthenticated(true);
+  const login = (data: { access_token: string; user: User }) => {
+    localStorage.setItem('token', data.access_token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    setToken(data.access_token);
+    setUser(data.user);
+    setAuthenticated(true);
+  };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setToken(null);
+    setUser(null);
     setAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, login, logout }}>
+    <AuthContext.Provider value={{ authenticated, user, token, login, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

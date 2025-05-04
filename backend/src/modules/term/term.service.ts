@@ -30,7 +30,7 @@ export class TermService {
     Object.assign(termEntity, data as TermEntity);
 
     const termCreated = await this.termRepository.save(termEntity);
-
+    
     await this.historyService.log(
       HistoryAction.CREATE_TERM,
       HistoryEntity.TERM,
@@ -83,6 +83,13 @@ export class TermService {
     Object.assign(term, newData as TermEntity);
     const updatedTerm = await this.termRepository.save(term);
   
+    await this.historyService.log(
+      HistoryAction.UPDATE_TERM,
+      HistoryEntity.TERM,
+      id,
+      term,
+    );
+
     // Buscar todos os usuários que aceitaram esse termo
     const acceptances = await this.userTermAcceptanceRepository.find({
       where: { term: { id } },

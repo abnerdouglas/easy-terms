@@ -7,7 +7,7 @@ import { Roles } from '../auth/decorators/role.decorator';
 import { Role } from '../user/enums/role.enum';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.ADMIN)
+@Roles(Role.ADMIN, Role.EMPLOYEE)
 @Controller('/user-term-acceptance')
 @ApiTags("user-term-acceptance")
 @ApiBearerAuth()
