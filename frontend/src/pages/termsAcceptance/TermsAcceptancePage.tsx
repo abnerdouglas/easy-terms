@@ -1,12 +1,13 @@
 import { Table, Card, Typography, Tag, Button } from 'antd';
 import { useEffect, useState } from 'react';
-import { getTermsAcceptanced } from '../../services/termsAcceptance/termsAcceptanceService';
+import { getTermsAcceptanced, revokeConsent } from '../../services/termsAcceptance/termsAcceptanceService';
 import { RevokeConsentModal } from '../../components/RevokeConsentModal/RevokeConsentModal';
-import { revokeConsent } from '../../services/termsAcceptance/termsAcceptanceService';
+import { useAuth } from '../../context/AuthContext';
 
 const { Title } = Typography;
 
 export default function TermsAcceptancePage() {
+    const { user } = useAuth();
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selectedLog, setSelectedLog] = useState<any | null>(null);
@@ -16,7 +17,13 @@ export default function TermsAcceptancePage() {
         setLoading(true);
         try {
             const response = await getTermsAcceptanced();
-            setLogs(response.data);
+
+            // Se for EMPLOYEE, filtra apenas os logs dele
+            const filteredLogs = user?.role === 'EMPLOYEE'
+                ? response.data.filter((log: any) => log.user?.id === user.id)
+                : response.data;
+
+            setLogs(filteredLogs);
         } catch {
             console.error('Erro ao buscar histórico de termos aceitos');
         } finally {
@@ -109,11 +116,11 @@ export default function TermsAcceptancePage() {
         },
     ];
 
-
     return (
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: 24 }}>
             <Card>
                 <Title level={3}>Histórico de Termos Aceitos</Title>
+
                 <Table
                     columns={columns}
                     dataSource={logs}
@@ -133,9 +140,7 @@ export default function TermsAcceptancePage() {
                     userName={selectedLog?.user?.name || ''}
                     termTitle={selectedLog?.term?.title || ''}
                 />
-
             </Card>
-
         </div>
     );
 }
