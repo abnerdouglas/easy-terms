@@ -7,10 +7,10 @@ export class UserTermAcceptanceEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @ManyToOne(() => UserEntity, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, { nullable: false, onDelete: 'RESTRICT' })
   user: UserEntity;
 
-  @ManyToOne(() => TermEntity, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => TermEntity, { nullable: false, onDelete: 'RESTRICT' })
   term: TermEntity;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
